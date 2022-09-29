@@ -13,7 +13,7 @@ $ pip install upland-api
 # Usage
 
 ```python
->>> from upland.developers import UplandDevelopersAPI
+>>> from upland_api.developers import UplandDevelopersAPI
 >>> 
 >>> api = UplandDevelopersAPI('your-api-key', server='development/ production')
 ```
