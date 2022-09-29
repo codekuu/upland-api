@@ -37,7 +37,7 @@ $ pip install upland-api
 
 * Get properties in San Francisco (City ID: 1)
 ```python
->>> r = api.properties.get(cityId=1)
+>>> r = api.properties.get_properties(cityId=1)
 >>> r
 ```
 
@@ -45,24 +45,24 @@ $ pip install upland-api
 
 * Get neighborhoods in San Francisco (City ID: 1)
 ```python
->>> r = api.neighborhoods.get(cityId=1)
+>>> r = api.neighborhoods.get_neighborhoods(cityId=1)
 >>> r
 ```
 
 * Get all neighborhoods
 ```python
->>> r = api.neighborhoods.get()
+>>> r = api.neighborhoods.get_neighborhoods()
 >>> r
 ```
 
 * Get neighborhoods by name
 ```python
->>> r = api.neighborhoods.get(textSearch="Financial")
+>>> r = api.neighborhoods.get_neighborhoods(textSearch="Financial")
 >>> r
 ```
 
 * Get neighborhoods by city and name
 ```python
->>> r = api.neighborhoods.get(cityId=1, textSearch="Financial")
+>>> r = api.neighborhoods.get_neighborhoods(cityId=1, textSearch="Financial")
 >>> r
 ```

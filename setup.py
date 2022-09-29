@@ -9,7 +9,7 @@ with open(path.join(BASE, "README.md"), encoding="utf-8") as f:
 
 setuptools.setup(
     name="upland-api",
-    version="1.0.1",
+    version="1.0.2",
     packages=setuptools.find_packages(),
     install_requires=[
         "requests",
