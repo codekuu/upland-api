@@ -1,6 +1,6 @@
 import requests as RealRequests
-from upland_api.global_methods import verify_success
-from upland_api.developers.models.neighborhoods import GetNeighborhoodsOK
+from ...global_methods import verify_success
+from ..models.neighborhoods import GetNeighborhoodsOK
 
 
 class Neighborhoods:

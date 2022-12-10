@@ -1,7 +1,7 @@
 import requests as RealRequests
 from dataclasses import dataclass
-from upland_api.global_methods import verify_success
-from upland_api.developers.models.auth import CreatedConnectionCodeCreated
+from ...global_methods import verify_success
+from ..models.auth import CreatedConnectionCodeCreated
 
 
 @dataclass

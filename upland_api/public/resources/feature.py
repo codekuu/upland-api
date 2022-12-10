@@ -1,5 +1,5 @@
 import requests as RealRequests
-from upland_api.global_methods import verify_success
+from ...global_methods import verify_success
 from upland_api.public.models.feature import GetCityOK
 
 
