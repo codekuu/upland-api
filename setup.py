@@ -18,7 +18,7 @@ setuptools.setup(
     name=__name__,
     version=__version__,
     packages=setuptools.find_packages(),
-    install_requires=["requests", "random-user-agent==1.0.1"],
+    install_requires=["requests==2.28.1", "pydantic==1.10.2"],
     python_requires=">=3.6",
     author=__author__,
     author_email=__author_email__,
