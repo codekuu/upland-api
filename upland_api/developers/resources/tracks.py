@@ -1,4 +1,10 @@
-import requests
+import requests as RealRequests
+from upland_api.global_methods import verify_success
+from upland_api.developers.models.tracks import (
+    GetTracksOK,
+    GetTrackOK,
+    GetTrackBuildingsOK,
+)
 
 
 class Tracks:
@@ -7,11 +13,11 @@ class Tracks:
     https://api.sandbox.upland.me/developers-api/docs/#/Generic%20Endpoints
     """
 
-    def __init__(self, base):
-        self.__base = base
-        self.__base_url = f"{base.base_url}/tracks"
+    def __init__(self, requests: RealRequests, base_path: str):
+        self.__requests = requests
+        self.__base_path = base_path
 
-    def get_tracks(self, cityName, includePath):
+    def get_tracks(self, cityName, includePath) -> GetTracksOK:
         """
         `Locks the escrow container (Optional)`
 
@@ -24,7 +30,6 @@ class Tracks:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}"
         params = {}
 
         if cityName:
@@ -32,10 +37,12 @@ class Tracks:
         if includePath:
             params["includePath"] = includePath
 
-        r = requests.get(url, headers=self.__base.headers, params=params)
-        return r.status_code
+        r = self.__requests.get(f"{self.__base_path}", params=params)
+        verify_success(r, 200)
 
-    def get_track(self, trackId: int):
+        return r.json()
+
+    def get_track(self, trackId: int) -> GetTrackOK:
         """
         `Retrieve track's information`
 
@@ -45,11 +52,12 @@ class Tracks:
         :type trackId: int
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/{trackId}"
-        r = requests.get(url, headers=self.__base.headers).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}/{trackId}")
+        verify_success(r, 200)
 
-    def get_track_buildings(self, trackId: int):
+        return r.json()
+
+    def get_track_buildings(self, trackId: int) -> GetTrackBuildingsOK:
         """
         `Retrieve buildings on a track`
 
@@ -59,6 +67,7 @@ class Tracks:
         :type trackId: int
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/{trackId}/buildings"
-        r = requests.get(url, headers=self.__base.headers).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}/{trackId}/buildings")
+        verify_success(r, 200)
+
+        return r.json()

@@ -1,4 +1,11 @@
-import requests
+import requests as RealRequests
+from upland_api.global_methods import verify_success
+from upland_api.developers.models.containers import (
+    ResolveContainerPayloadActions,
+    CreateContainerOK,
+    GetContainerOK,
+    ResolveRefundContainerOK,
+)
 
 
 class Containers:
@@ -7,26 +14,13 @@ class Containers:
     https://api.sandbox.upland.me/developers-api/docs/#/Escrow%20Container%20Management
     """
 
-    def __init__(self, base):
-        self.__base = base
-        self.__base_url = f"{base.base_url}/containers"
-
-    def lock(self, containerId: int):
-        """
-        `Locks the escrow container (Optional)`
-        This action will lock the container. After this action users can not join this container. This doesn't apply to all 3p apps. It's an optional call if a third party wants to make sure that no one else will enter the container.
-
-        :param containerId: The ID of the container
-        :type containerId: int
-        :return: Status Code
-        """
-        url = f"{self.__base_url}/{containerId}/lock"
-        r = requests.post(url, headers=self.__base.headers)
-        return r.status_code
+    def __init__(self, requests: RealRequests, base_path: str):
+        self.__requests = requests
+        self.__base_path = base_path
 
     def create_container(
         self,
-    ):
+    ) -> CreateContainerOK:
         """
         `Create a new container`
 
@@ -36,25 +30,12 @@ class Containers:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}"
-        r = requests.post(url, headers=self.__base.headers).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}")
+        verify_success(r, 201)
 
-    def refresh_container(self, containerId: int):
-        """
-        `Refresh Expiration time of Escrow Container`
+        return r.json()
 
-        Refresh the container expiration for the same amount of time previously informed.
-
-        :param containerId: The ID of the container
-        :type containerId: int
-        :return: Status Code
-        """
-        url = f"{self.__base_url}/{containerId}/refresh-expiration-time"
-        r = requests.post(url, headers=self.__base.headers)
-        return r.status_code
-
-    def get_container(self, containerId: int):
+    def get_container(self, containerId: int) -> GetContainerOK:
         """
         `Query Escrow Container`
 
@@ -64,11 +45,45 @@ class Containers:
         :type containerId: int
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/{containerId}"
-        r = requests.get(url, headers=self.__base.headers).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}/{containerId}")
+        verify_success(r, 201)
 
-    def resolve_container(self, containerId: int, actions: list):
+        return r.json()
+
+    def refresh_container(self, containerId: int) -> int:
+        """
+        `Refresh Expiration time of Escrow Container`
+
+        Refresh the container expiration for the same amount of time previously informed.
+
+        :param containerId: The ID of the container
+        :type containerId: int
+        :return: Status Code
+        """
+        r = self.__requests.get(
+            f"{self.__base_path}/{containerId}/refresh-expiration-time"
+        )
+        verify_success(r, 204)
+
+        return r.status_code
+
+    def lock(self, containerId: int) -> int:
+        """
+        `Locks the escrow container (Optional)`
+        This action will lock the container. After this action users can not join this container. This doesn't apply to all 3p apps. It's an optional call if a third party wants to make sure that no one else will enter the container.
+
+        :param containerId: The ID of the container
+        :type containerId: int
+        :return: Status Code
+        """
+        r = self.__requests.get(f"{self.__base_path}/{containerId}/lock")
+        verify_success(r, 204)
+
+        return r.status_code
+
+    def resolve_container(
+        self, containerId: int, actions: ResolveContainerPayloadActions
+    ) -> ResolveRefundContainerOK:
         """
         `Execute operations over the escrow assets and resolve container`
 
@@ -82,12 +97,15 @@ class Containers:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/{containerId}/resolve"
-        data = {"actions": actions}
-        r = requests.post(url, headers=self.__base.headers, data=data).json()
-        return r
+        r = self.__requests.post(
+            f"{self.__base_path}/{containerId}/resolve",
+            data={"actions": actions},
+        )
+        verify_success(r, 200)
 
-    def refund_container(self, containerId: int):
+        return r.json()
+
+    def refund_container(self, containerId: int) -> ResolveRefundContainerOK:
         """
         `Refund container assets`
 
@@ -98,11 +116,14 @@ class Containers:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/{containerId}/refund"
-        r = requests.post(url, headers=self.__base.headers).json()
-        return r
+        r = self.__requests.post(
+            f"{self.__base_path}/{containerId}/refund",
+        )
+        verify_success(r, 200)
 
-    def delete_transaction(self, containerId: int, transactionId: str):
+        return r.json()
+
+    def delete_transaction(self, containerId: int, transactionId: str) -> int:
         """
         `Remove a transaction from container`
 
@@ -113,6 +134,9 @@ class Containers:
 
         :return: Status Code
         """
-        url = f"{self.__base_url}/{containerId}/transactions/{transactionId}"
-        r = requests.delete(url, headers=self.__base.headers)
+        r = self.__requests.delete(
+            f"{self.__base_path}/{containerId}/transactions/{transactionId}",
+        )
+        verify_success(r, 204)
+
         return r.status_code

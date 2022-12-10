@@ -1,4 +1,6 @@
-import requests
+import requests as RealRequests
+from upland_api.global_methods import verify_success
+from upland_api.developers.models.neighborhoods import GetNeighborhoodsOK
 
 
 class Neighborhoods:
@@ -7,15 +9,15 @@ class Neighborhoods:
     https://api.sandbox.upland.me/developers-api/docs/#/Generic%20Endpoints/NeighborhoodsController_getNeighborhoods
     """
 
-    def __init__(self, base):
-        self.__base = base
-        self.__base_url = f"{base.base_url}/neighborhoods"
+    def __init__(self, requests: RealRequests, base_path: str):
+        self.__requests = requests
+        self.__base_path = base_path
 
     def get_neighborhoods(
         self,
         cityId: int = 0,
         textSearch: str = "",
-    ):
+    ) -> GetNeighborhoodsOK:
         """
         `List neighborhoods`
 
@@ -26,12 +28,13 @@ class Neighborhoods:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}"
         params = {}
         if cityId:
             params["cityId"] = cityId
         if textSearch:
             params["textSearch"] = textSearch
+        print(params)
+        r = self.__requests.get(f"{self.__base_path}", params=params)
+        verify_success(r, 200)
 
-        r = requests.get(url, headers=self.__base.headers, params=params).json()
-        return r
+        return r.json()

@@ -14,55 +14,68 @@ $ pip install upland-api
 
 ```python
 >>> from upland_api.developers import UplandDevelopersAPI
->>> 
->>> api = UplandDevelopersAPI('your-api-key', server='development/ production')
+>>> from upland_api.public import UplandPublicAPI
+>>>
+>>> UplandDevAPI = UplandDevelopersAPI(api_key="XXXX", logging=True)
+>>> UplandPubAPI = UplandPublicAPI(api_key="XXXX", logging=True)
 ```
 
 ## Available Resources
 
 ```python
->> api.auth
->> api.user
->> api.containers
->> api.tracks
->> api.buildings
->> api.cities
->> api.properties
->> api.neighborhoods
->> api.collections
->> api.treasures_history
+>> UplandDevAPI.auth
+>> UplandDevAPI.buildings
+>> UplandDevAPI.cities
+>> UplandDevAPI.collections
+>> UplandDevAPI.containers
+>> UplandDevAPI.neighborhoods
+>> UplandDevAPI.properties
+>> UplandDevAPI.tracks
+>> UplandDevAPI.treasures_history
+>> UplandDevAPI.user
+
+
+>> UplandPubAPI.feature
+>> UplandPubAPI.settings
 ```
+
+## Examples
 
 ### Get properties
 
-* Get properties in San Francisco (City ID: 1)
+- Get properties in San Francisco (City ID: 1)
+
 ```python
->>> r = api.properties.get_properties(cityId=1)
+>>> r = UplandDevAPI.properties.get_properties(cityId=1)
 >>> r
 ```
 
 ### Get Neighborhoods
 
-* Get neighborhoods in San Francisco (City ID: 1)
+- Get neighborhoods in San Francisco (City ID: 1)
+
 ```python
->>> r = api.neighborhoods.get_neighborhoods(cityId=1)
+>>> r = UplandDevAPI.neighborhoods.get_neighborhoods(cityId=1)
 >>> r
 ```
 
-* Get all neighborhoods
+- Get all neighborhoods
+
 ```python
->>> r = api.neighborhoods.get_neighborhoods()
+>>> r = UplandDevAPI.neighborhoods.get_neighborhoods()
 >>> r
 ```
 
-* Get neighborhoods by name
+- Get neighborhoods by name
+
 ```python
->>> r = api.neighborhoods.get_neighborhoods(textSearch="Financial")
+>>> r = UplandDevAPI.neighborhoods.get_neighborhoods(textSearch="Financial")
 >>> r
 ```
 
-* Get neighborhoods by city and name
+- Get neighborhoods by city and name
+
 ```python
->>> r = api.neighborhoods.get_neighborhoods(cityId=1, textSearch="Financial")
+>>> r = UplandDevAPI.neighborhoods.get_neighborhoods(cityId=1, textSearch="Financial")
 >>> r
 ```

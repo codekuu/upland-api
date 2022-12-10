@@ -1,4 +1,6 @@
-import requests
+import requests as RealRequests
+from upland_api.global_methods import verify_success
+from upland_api.developers.models.buildings import BuildingsOK
 
 
 class Buildings:
@@ -7,11 +9,11 @@ class Buildings:
     https://api.sandbox.upland.me/developers-api/docs/#/Generic%20Endpoints
     """
 
-    def __init__(self, base):
-        self.__base = base
-        self.__base_url = f"{base.base_url}/buildings"
+    def __init__(self, requests: RealRequests, base_path: str):
+        self.__requests = requests
+        self.__base_path = base_path
 
-    def get_buildings(self, boundaries: list):
+    def get_buildings(self, boundaries: list) -> BuildingsOK:
         """
         `Retrieve buildings given some boundaries`
 
@@ -22,8 +24,10 @@ class Buildings:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}"
-        data = {"boundaries": boundaries}
+        r = self.__requests.post(
+            f"{self.__base_path}",
+            data={"boundaries": boundaries},
+        )
+        verify_success(r, 200)
 
-        r = requests.post(url, headers=self.__base.headers, data=data).json()
-        return r
+        return r.json()

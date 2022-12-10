@@ -1,25 +1,29 @@
 import requests as RealRequests
 from upland_api.global_methods import verify_success
-from upland_api.developers.models.collections import CollectionsOK
+from upland_api.public.models.feature import GetCityOK
 
 
-class Collections:
+class Feature:
     """
-    COLLECTIONS
-    https://api.sandbox.upland.me/developers-api/docs/#/Generic%20Endpoints/CollectionsController_getCollections
+    Feature Endpoint
+    https://api.upland.me/feature
     """
 
     def __init__(self, requests: RealRequests, base_path: str):
         self.__requests = requests
         self.__base_path = base_path
 
-    def get_collections(self) -> CollectionsOK:
+    def city(
+        self,
+    ) -> GetCityOK:
         """
-        `List collections`
+        `Get All Cities and features`
+
+        Get All Cities and features enabled in those cities.
 
         :return: Dict response from Upland Developers API
         """
-        r = self.__requests.get(f"{self.__base_path}")
+        r = self.__requests.get(f"{self.__base_path}/city")
         verify_success(r, 200)
 
         return r.json()

@@ -1,6 +1,13 @@
 import setuptools
 from os import path
-
+from upland_api.__version__ import (
+    __author__,
+    __author_email__,
+    __description__,
+    __name__,
+    __url__,
+    __version__,
+)
 
 BASE = path.abspath(path.dirname(__file__))
 
@@ -8,19 +15,17 @@ with open(path.join(BASE, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setuptools.setup(
-    name="upland-api",
-    version="1.0.2",
+    name=__name__,
+    version=__version__,
     packages=setuptools.find_packages(),
-    install_requires=[
-        "requests",
-    ],
+    install_requires=["requests", "random-user-agent==1.0.1"],
     python_requires=">=3.6",
-    author="Kevin Kuusela",
-    author_email="kevin@oppetinternet.se",
-    description="Upland API Wrapper",
+    author=__author__,
+    author_email=__author_email__,
+    description=__description__,
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/codekuu/upland-api",
+    url=__url__,
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
