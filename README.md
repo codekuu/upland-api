@@ -13,8 +13,8 @@ $ pip install upland-api
 # Usage
 
 ```python
->>> from upland_api.developers import UplandDevelopersAPI
->>> from upland_api.public import UplandPublicAPI
+>>> from upland_api import UplandDevelopersAPI
+>>> from upland_api import UplandPublicAPI
 >>>
 >>> UplandDevAPI = UplandDevelopersAPI(api_key="XXXX", logging=True)
 >>> UplandPubAPI = UplandPublicAPI(api_key="XXXX", logging=True)

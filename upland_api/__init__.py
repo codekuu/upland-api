@@ -1,5 +1,5 @@
-from upland_api import developers  # noqa
-from upland_api import public  # noqa
+from upland_api.developers import UplandDevelopersAPI  # noqa
+from upland_api.public import UplandPublicAPI  # noqa
 from .__version__ import (
     __author__,
     __author_email__,
