@@ -8,7 +8,7 @@
 # from Upland (HACKER#0885 @Discord)
 
 __title__ = "upland-api"
-__name__ = ""
+__name__ = "upland-api"
 __description__ = "Python API Wrapper for Upland.me's Public and Developers API"
 __url__ = "https://github.com/codekuu/upland-api"
 __version__ = "1.1.0"
