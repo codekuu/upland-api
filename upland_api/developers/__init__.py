@@ -1,6 +1,5 @@
 from requests import Session
 from urllib.parse import urljoin
-from dataclasses import dataclass
 from upland_api.developers import resources
 
 
