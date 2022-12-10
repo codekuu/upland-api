@@ -1,12 +1,11 @@
 from requests import Session
 from urllib.parse import urljoin
-from dataclasses import dataclass
-from upland_api.developers import resources
+from upland_api.public import resources
 
 
-class UplandDevelopersAPIRequests(Session):
+class UplandPublicAPIRequests(Session):
     def __init__(self, base_url=None, headers={}, logging=False, *args, **kwargs):
-        super(UplandDevelopersAPIRequests, self).__init__(*args, **kwargs)
+        super(UplandPublicAPIRequests, self).__init__(*args, **kwargs)
         self.base_url = base_url
         self.headers = headers
         self.logging = logging
@@ -34,16 +33,16 @@ class UplandDevelopersAPIRequests(Session):
         if json:
             kwargs["json"] = json
 
-        return super(UplandDevelopersAPIRequests, self).request(
+        return super(UplandPublicAPIRequests, self).request(
             method, url, headers=self.headers, allow_redirects=allow_redirects, **kwargs
         )
 
 
-class UplandDevelopersAPI:
+class UplandPublicAPI:
     def __init__(
         self,
         api_key: str,
-        base_url: str = "https://api.sandbox.upland.me",
+        base_url: str = "https://api.upland.me/",
         logging: bool = False,
     ):
         self.__api_key = api_key
@@ -51,39 +50,15 @@ class UplandDevelopersAPI:
         self.__logging = logging
 
         # Set up the base requests Session
-        self.__base = UplandDevelopersAPIRequests(
+        self.__base = UplandPublicAPIRequests(
             base_url=self.__base_url,
             headers=self.__get_headers(),
             logging=self.__logging,
         )
 
         # Init the endpoints with the base
-        self.auth = resources.Auth(
-            requests=self.__base, base_path="/developers-api/auth"
-        )
-        self.buildings = resources.Buildings(
-            self.__base, base_path="/developers-api/buildings"
-        )
-        self.cities = resources.Cities(
-            self.__base, base_path="/developers-api/buildings"
-        )
-        self.collections = resources.Collections(
-            self.__base, base_path="/developers-api/collections"
-        )
-        self.containers = resources.Containers(
-            self.__base, base_path="/developers-api/containers"
-        )
-        self.neighborhoods = resources.Neighborhoods(
-            self.__base, base_path="/developers-api/neighborhoods"
-        )
-        self.properties = resources.Properties(
-            self.__base, base_path="/developers-api/properties"
-        )
-        self.tracks = resources.Tracks(self.__base, base_path="/developers-api/tracks")
-        self.treasures_history = resources.TreasuresHistory(
-            self.__base, base_path="/developers-api/treasures-history"
-        )
-        self.user = resources.User(self.__base, base_path="/developers-api/user")
+        self.feature = resources.Feature(requests=self.__base, base_path="/feature")
+        self.settings = resources.Settings(requests=self.__base, base_path="/settings")
 
     def __get_headers(self):
         """

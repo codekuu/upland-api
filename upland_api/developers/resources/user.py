@@ -1,4 +1,12 @@
-import requests
+import requests as RealRequests
+from upland_api.global_methods import verify_success
+from upland_api.developers.models.user import (
+    GetProfileOK,
+    GetAssetNftsOK,
+    GetAssetsPropertiesOK,
+    GetBalacesOK,
+    PostJoinOK,
+)
 
 
 class User:
@@ -7,19 +15,20 @@ class User:
     https://api.sandbox.upland.me/developers-api/docs/#/Upland%20User%20Information
     """
 
-    def __init__(self, base):
-        self.__base = base
-        self.__base_url = f"{base.base_url}/user"
+    def __init__(self, requests: RealRequests, base_path: str):
+        self.__requests = requests
+        self.__base_path = base_path
 
-    def profile(self):
+    def profile(self) -> GetProfileOK:
         """
         `Retrieve user profile information`
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/profile"
-        r = requests.get(url, headers=self.__base.headers).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}/profile")
+        verify_success(r, 200)
+
+        return r.json()
 
     def assets_nfts(
         self,
@@ -35,7 +44,7 @@ class User:
             "structure",
             "structornmt",
         ],
-    ):
+    ) -> GetAssetNftsOK:
         """
         `Get List of User's NFTs given a category`
         Available Categories (blkexplorer, essential, landvehicle, memento, outdoordecor, spirithlwn, structure, structornmt)
@@ -49,20 +58,21 @@ class User:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/assets/nfts"
         params = {
             "currentPage": currentPage,
             "pageSize": pageSize,
             "categories": categories,
         }
-        r = requests.get(url, headers=self.__base.headers, params=params).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}/assets/nfts", params=params)
+        verify_success(r, 200)
+
+        return r.json()
 
     def assets_properties(
         self,
         currentPage: int = 0,
         pageSize: int = 10,
-    ):
+    ) -> GetAssetsPropertiesOK:
         """
         `Get List of User's properties`
 
@@ -73,25 +83,29 @@ class User:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/assets/properties"
         params = {
             "currentPage": currentPage,
             "pageSize": pageSize,
         }
-        r = requests.get(url, headers=self.__base.headers, params=params).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}/assets/properties", params=params)
+        verify_success(r, 200)
 
-    def balances(self):
+        return r.json()
+
+    def balances(self) -> GetBalacesOK:
         """
         `Retrieve user balances as UPX and SPARK`
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/user/balances"
-        r = requests.get(url, headers=self.__base.headers).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}/balances")
+        verify_success(r, 200)
 
-    def join(self, containerId: int, upxAmount: int, sparkAmount: int, assets: list):
+        return r.json()
+
+    def join(
+        self, containerId: int, upxAmount: int, sparkAmount: int, assets: list
+    ) -> PostJoinOK:
         """
         `Put assets in escrow container`
 
@@ -108,35 +122,13 @@ class User:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/XXXXXXXXXXXXXX"
         data = {
             "containerId": containerId,
             "upxAmount": upxAmount,
             "sparkAmount": sparkAmount,
             "assets": assets,
         }
-        r = requests.post(url, headers=self.__base.headers, data=data).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}/join", data=data)
+        verify_success(r, 200)
 
-    def travels(
-        self,
-        currentPage: int = 0,
-        pageSize: int = 10,
-    ):
-        """
-        `Get List of User travels`
-
-        :param currentPage: int = 0, defaults to 0
-        :type currentPage: int (optional)
-        :param pageSize: The number of results to return per call, defaults to 10
-        :type pageSize: int (optional)
-
-        :return: Dict response from Upland Developers API
-        """
-        url = f"{self.__base_url}/XXXXXXXXXXXXXX"
-        params = {
-            "currentPage": currentPage,
-            "pageSize": pageSize,
-        }
-        r = requests.get(url, headers=self.__base.headers, params=params).json()
-        return r
+        return r.json()

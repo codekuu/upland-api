@@ -1,19 +1,23 @@
-import requests
+import requests as RealRequests
+from dataclasses import dataclass
+from upland_api.global_methods import verify_success
+from upland_api.developers.models.auth import CreatedConnectionCodeCreated
 
 
+@dataclass
 class Auth:
     """
     TREASURES HISTORY
     https://api.sandbox.upland.me/developers-api/docs/#/Generic%20Endpoints/TreasuresController_getTreasuresHistory
     """
 
-    def __init__(self, base):
-        self.__base = base
-        self.__base_url = f"{base.base_url}/auth"
+    def __init__(self, requests: RealRequests, base_path: str):
+        self.__requests = requests
+        self.__base_path = base_path
 
     def create_connection_code(
         self,
-    ):
+    ) -> CreatedConnectionCodeCreated:
         """
         `Create Connection Code`
 
@@ -23,6 +27,7 @@ class Auth:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}/otp/init"
-        r = requests.post(url, headers=self.__base.headers).json()
-        return r
+        r = self.__requests.post(f"{self.__base_path}/otp/init")
+        verify_success(r, 201)
+
+        return r.json()

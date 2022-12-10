@@ -1,4 +1,6 @@
-import requests
+import requests as RealRequests
+from upland_api.global_methods import verify_success
+from upland_api.developers.models.treasures_history import GetTreasuresHistoryOK
 
 
 class TreasuresHistory:
@@ -7,16 +9,16 @@ class TreasuresHistory:
     https://api.sandbox.upland.me/developers-api/docs/#/Generic%20Endpoints/TreasuresController_getTreasuresHistory
     """
 
-    def __init__(self, base):
-        self.__base = base
-        self.__base_url = f"{base.base_url}/treasures-history"
+    def __init__(self, requests: RealRequests, base_path: str):
+        self.__requests = requests
+        self.__base_path = base_path
 
     def get_properties(
         self,
         cityId: int,
         currentPage: int = 0,
         pageSize: int = 10,
-    ):
+    ) -> GetTreasuresHistoryOK:
         """
         `List available properties given a city id`
 
@@ -29,7 +31,8 @@ class TreasuresHistory:
 
         :return: Dict response from Upland Developers API
         """
-        url = f"{self.__base_url}"
         params = {"currentPage": currentPage, "pageSize": pageSize, "cityId": cityId}
-        r = requests.get(url, headers=self.__base.headers, params=params).json()
-        return r
+        r = self.__requests.get(f"{self.__base_path}", params=params)
+        verify_success(r, 200)
+
+        return r.json()
